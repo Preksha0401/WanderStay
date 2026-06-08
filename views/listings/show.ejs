@@ -101,7 +101,7 @@
 
 		</div>
 	</div>
-	<% if (read.geometry && read.geometry.lat && read.geometry.lng) { %>
+	<!-- <% if (read.geometry && read.geometry.lat && read.geometry.lng) { %>
 	<script>
 		const lat = Number("<%= read.geometry.lat %>");
 		const lng = Number("<%= read.geometry.lng %>");
@@ -121,4 +121,27 @@
   `);
 	</script>
 
+<% } %> -->
+<% if (read.geometry && read.geometry.coordinates && read.geometry.coordinates.length === 2) { %>
+<script>
+    // GeoJSON stores [longitude, latitude]
+    const lng = Number("<%= read.geometry.coordinates[0] %>");
+    const lat = Number("<%= read.geometry.coordinates[1] %>");
+
+    const map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup(`
+            <strong><%= read.title %></strong><br>
+            <%= read.location %>, <%= read.country %><br>
+            ₹ <%= read.price %> / night
+        `);
+</script>
+<% } else { %>
+    <p class="text-muted">Map not available for this listing.</p>
 <% } %>
