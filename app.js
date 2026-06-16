@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== "production") {
     console.log("Development mode");
 }
 require('dotenv').config();
-console.log(process.env.SECRET);
+// console.log(process.env.SECRET);
 
 const express=require("express");
 const app=express();
@@ -24,7 +24,7 @@ const LocalStrategy=require("passport-local");
 const User=require("./Models/user.js");
 
 const dbURl=process.env.ATLASTDB_URL;
-console.log(dbURl);
+// console.log(dbURl);
 
 const MongoStore = require("connect-mongo");
 
@@ -53,6 +53,9 @@ const sessionOptions={
 const listingsRouter=require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter=require("./routes/user.js");
+const hostRouter = require("./routes/host");
+const adminRouter = require("./routes/admin");
+
 
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
@@ -121,6 +124,9 @@ app.use("/listings",listingsRouter);
 app.use("/listings/:id/reviews",reviewsRouter);
 app.use("/",userRouter)
 
+app.use("/host", hostRouter);
+app.use("/admin", adminRouter);
+
 app.all(/.*/, (req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
@@ -133,6 +139,16 @@ app.use((err,req,res,next)=>{
 	let {statusCode=500,message="Something went wrong!"}=err;
 	res.status(statusCode).render("error.ejs",{message});
 	// res.status(statusCode).send(message);
+});
+
+app.get("/check", async (req, res) => {
+    const User = require("./Models/user");
+
+    let users = await User.find({});
+
+    console.log(users);
+
+    res.send(users);
 });
 
 app.listen(8080,()=>{

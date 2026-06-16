@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <h2>Host Applications</h2>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>License</th>   <!-- ✅ Added missing header -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let host of applications){ %>
+            <tr>
+                <td><%= host.username %></td>
+                <td><%= host.email %></td>
+                <td><%= host.ownerStatus %></td>
+
+                <!-- ✅ Fixed: host.license not app.license -->
+                <td>
+                    <% if(host.license && host.license.url) { %>
+                        <a href="<%= host.license.url %>" target="_blank">
+                            <img src="<%= host.license.url %>" style="width:200px;" alt="Business License" />
+                        </a>
+                    <% } else { %>
+                        <span class="text-muted">No license uploaded</span>
+                    <% } %>
+                </td>
+
+                <td>
+                    <form action="/admin/<%= host._id %>/approve" method="POST" style="display:inline;">
+                        <button class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

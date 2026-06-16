@@ -47,17 +47,24 @@
 
 
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">WanderStay your Home</a>
 
         <% if(!currUser){ %>
           <a class="nav-link" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" href="/login"><b>Log in</b></a>
         <% } %>
         <% if(currUser){ %>
+          <% if(currUser.ownerStatus==="none"){ %>
+            <a class="nav-link" href="/host/apply"><b>Become a host</b></a>
+          <% }  else if(currUser.ownerStatus==="pending"){ %>
+            <a class="nav-link disabled" href="#" ><b>Verification Pending</b></a>
+          <% }  else if (currUser.role=="owner" && currUser.ownerStatus==="verified"){ %>
+            <a class="nav-link" href="/listings/new">WanderStay your Home</a>
+          <% } %>
         <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
       </div>
 
+      
     </div>
   </div>
 </nav>

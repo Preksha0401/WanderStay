@@ -33,7 +33,21 @@ module.exports.isOwner=async(req,res,next)=>{
 	next();
 };
 
+module.exports.isVerifiedHost=(req,res,next)=>{
+	if(req.user.role!=="owner" || req.user.ownerStatus!=="verified"){
+		req.flash("error","You must be a verified host.");
+		return res.redirect("/listings");
+	}
+	next();
+};
 
+module.exports.isAdmin=(req,res,next)=>{
+	if(!req.user || req.user.role!=="admin"){
+		req.flash("error","Access denied");
+		return res.redirect("/listings");
+	}
+	next();
+}
 module.exports.validateListing=(req,res,next)=>{
 	let {error}=listingSchema.validate(req.body.listing);
 	if(error){
