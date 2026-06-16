@@ -14,11 +14,11 @@ router.get("/apply",isLoggedIn, (req, res) => {
 // POST - Receive Host Application Data
 router.post("/apply", isLoggedIn,upload.single("license"), async(req, res) => {
 
-    console.log("Before Save:", req.user);
-    console.log(req.file);
-    console.log(req.body);
-
     const currUser = req.user;
+    if (currUser.ownerStatus === "pending" || currUser.ownerStatus === "verified") {
+        req.flash("error", "You have already applied.");
+        return res.redirect("/listings");
+    }
     currUser.ownerStatus = "pending";   
     currUser.appliedAt = new Date();
 
