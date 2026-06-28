@@ -1,13 +1,13 @@
 // if(process.env.NODE_ENV!=="production"){
 // 	require("dotenv").config();
 // }
+require("dotenv").config();
 
 if (process.env.NODE_ENV !== "production") {
     console.log("Development mode");
 }
 
-require("dotenv").config();
-// console.log(process.env.SECRET);
+// console.log(process.env.CLOUD_NAME);
 
 const express = require("express");
 const app = express();
@@ -108,13 +108,19 @@ async function main() {
 // app.get("/",(req,res)=>{
 // 	res.send("Hi, I m a root");
 // });
-
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+app.get("/test", (req, res) => {
+    res.send("Working");
+});
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
 app.use("/host", hostRouter);
 app.use("/admin", adminRouter);
+
 
 app.all(/.*/, (req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));

@@ -23,18 +23,24 @@
                 <!-- ✅ Fixed: host.license not app.license -->
                 <td>
                     <% if(host.license && host.license.url) { %>
-                        <a href="<%= host.license.url %>" target="_blank">
-                            <img src="<%= host.license.url %>" style="width:200px;" alt="Business License" />
-                        </a>
+                        <a href="<%= host.license.url %>" target="_blank" class="btn btn-primary btn-sm">View License</a>      
                     <% } else { %>
                         <span class="text-muted">No license uploaded</span>
                     <% } %>
                 </td>
-
+            
                 <td>
+                    <form action="/admin/<%= host._id %>/analyze" method="post" style="display:inline;">
+                        <button class="btn btn-primary btn-sm">
+                            Analyze AI
+                        </button>
+                    </form>
                     <form action="/admin/<%= host._id %>/approve" method="POST" style="display:inline;">
                         <button class="btn btn-success btn-sm">Approve</button>
                     </form>
+                    <form action="/admin/<%= host._id %>/reject" method="POST" style="display:inline;">
+                        <button class="btn btn-danger btn-sm">Reject</button>
+                    </form>                    
                 </td>
             </tr>
             <% } %>

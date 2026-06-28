@@ -17,7 +17,7 @@ module.exports.showRoute=async(req,res)=>{
 	let {id}=req.params;
 
 	const read=await Listing.findById(id).populate({path:"reviews",populate:{path:"author"}}).populate("owner");
-	
+	console.log("Owner:", read.owner);
 	// if not listing
 	if(!read){
 	req.flash("error","Listing you requested does not existed");

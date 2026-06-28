@@ -1,13 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Models/user");
+const adminController=require("../controllers/admin");
 const { isLoggedIn, isAdmin } = require("../middleware");
 
 // Show pending applications
 router.get("/applications",isLoggedIn,isAdmin, async(req,res)=>{
     const applications = await User.find({ownerStatus: "pending"});
+	// console.log(applications);
     res.render("admin/applications.ejs", {applications});
 });
+
+// Analyze AI
+router.post("/:id/analyze",isLoggedIn,isAdmin,adminController.analyzeHost,(req,res)=>{
+	console.log("Analyze button clicked");
+	console.log(req.params.id);
+
+	res.send("Analyze Route working");
+})
 
 // Approve application
 router.post("/:id/approve",isLoggedIn,isAdmin, async(req,res)=>{

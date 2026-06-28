@@ -31,6 +31,11 @@ module.exports.renderLogin=(req,res)=>{
 
 module.exports.login= async(req,res)=>{
 	req.flash("success","Welcome to WanderStay! You are logged in");
+	
+	if(req.user.role==="admin"){
+		return res.redirect("/admin/applications");
+	}
+	
 	let redirectUrl=res.locals.redirectUrl || "/listings";
 	res.redirect(redirectUrl);
 };

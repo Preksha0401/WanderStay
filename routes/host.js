@@ -21,7 +21,7 @@ router.post("/apply", isLoggedIn,upload.single("license"), async(req, res) => {
     }
     currUser.ownerStatus = "pending";   
     currUser.appliedAt = new Date();
-
+    console.log(req.file);
     if(req.file){
         currUser.license={
             url:req.file.path,

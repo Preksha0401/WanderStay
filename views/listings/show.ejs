@@ -13,7 +13,7 @@
 
   <div class="card-body">
     <p class="card-text">
-      <i>Owned by <%= read.owner.username %></i><br><br>
+      <i>Owned by <%= read.owner ? read.owner.username : "Unknown User" %></i><br><br>
       <%= read.description %><br>
       ₹ <%= read.price.toLocaleString("en-IN") %><br>
       <%= read.location %><br>
