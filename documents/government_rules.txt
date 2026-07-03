@@ -1,0 +1,45 @@
+Business License Verification Guidelines
+
+Key Principles for Verification (based on official US government practices from SBA and state resources):
+
+1. Business Name / Legal Name must be present and match official records.
+   - Verify against Secretary of State databases or equivalent.
+
+2. License Number / Registration Number must be present.
+   - Cross-check with issuing authority's verification portal.
+
+3. Issue Date should be available.
+   - Ensures the license is current and not fabricated.
+
+4. Expiry Date should be available.
+   - If expiry date is missing or passed, manual verification or rejection is required.
+   - Always check renewal status via official channels.
+
+5. Physical Address must be present and verifiable.
+   - Confirm against business registration and utility/tax records if possible.
+
+6. Additional Mandatory Fields depending on jurisdiction:
+   - EIN/Tax ID (for most businesses)
+   - Owner/Principal information
+   - Business Type/Entity Structure (LLC, Corp, etc.)
+   - Industry-specific permits if applicable.
+
+7. Verification Process:
+   - Use official government websites to validate (e.g., Secretary of State business search, SBA resources).
+   - If more than two mandatory fields are missing or inconsistent, recommend rejection.
+   - If all core mandatory fields are present and verifiable, recommend provisional approval pending admin review.
+
+8. AI should only assist the admin with data extraction, cross-checking suggestions, and flagging inconsistencies.
+   - Final approval must always be done by a human admin to ensure compliance and accountability.
+
+Important Notes:
+- Requirements vary by state, county, and city. Always consult jurisdiction-specific resources.
+- Never rely solely on submitted documents; cross-reference with official public records.
+
+Sources and Links for Verification:
+- U.S. Small Business Administration (SBA): https://www.sba.gov/business-guide/launch-your-business/apply-licenses-permits
+- General business lookup examples: Washington DOR Business Lookup, Florida MyFloridaLicense, etc.
+- Secretary of State websites for each state (searchable via https://www.sos.state.[state-abbrev].us/ or similar).
+- For detailed guides: https://www.sba.gov/business-guide/register-your-business
+
+This knowledge base should be updated as regulations change. Always prioritize official government sources for the most current information.

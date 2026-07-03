@@ -28,6 +28,22 @@ const UserSchema = new mongoose.Schema({
     url: String,
     filename: String,
   },
+  licenseData: {
+    businessName: String,
+    licenseNumber: String,
+    issueDate: String,
+    expiryDate: String,
+    address: String,
+    extractedAt: Date,
+  },
+  aiAnalysis:{
+    status:String,
+    recommendation: String,
+    reason:String,
+    confidence: Number,
+    retrievedRules: [String],
+    analyzedAt:Date
+  }
 });
 
 // THIS MUST BE A FUNCTION

@@ -1,7 +1,7 @@
 const Listing=require("../Models/listing");
 const { listingSchema } = require("../schema");
 const axios=require("axios");
-
+const {analyzeLicenseWithReules}=require("../services/rag")
 module.exports.index=async (req, res) => {
 		const listings = await Listing.find({});
     	res.render("listings/index.ejs", { listings });  // pass the listings to the template    

@@ -1,46 +1,127 @@
 <% layout("/layouts/boilerplate") %>
 
 <div class="container mt-4">
-    <h2>Host Applications</h2>
+    <h2>Host Applications - AI License Verification</h2>
 
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>License</th>   <!-- ✅ Added missing header -->
+                <th>Applicant</th>
+                <th>License Preview</th>
+                <th>AI Extracted Data</th>
+                <th>AI Recommendation</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <% for(let host of applications){ %>
             <tr>
-                <td><%= host.username %></td>
-                <td><%= host.email %></td>
-                <td><%= host.ownerStatus %></td>
+                <td>
+                    <strong><%= host.username %></strong><br>
+                    <small class="text-muted"><%= host.email %></small><br>
+                    <span class="badge bg-<%= host.ownerStatus === 'Approved' ? 'success' : 'warning' %>"><%= host.ownerStatus %></span>
+                </td>
 
-                <!-- ✅ Fixed: host.license not app.license -->
+                <!-- License Preview -->
                 <td>
                     <% if(host.license && host.license.url) { %>
-                        <a href="<%= host.license.url %>" target="_blank" class="btn btn-primary btn-sm">View License</a>      
+                        <img src="<%= host.license.url %>" 
+                             class="img-thumbnail mb-2" 
+                             style="width: 130px; height: 160px; object-fit: cover;"
+                             alt="License">
+                        <br>
+                        <a href="<%= host.license.url %>" target="_blank" class="btn btn-sm btn-outline-primary">View Full</a>
                     <% } else { %>
-                        <span class="text-muted">No license uploaded</span>
+                        <span class="text-muted">No license</span>
                     <% } %>
                 </td>
-            
+
+                <!-- AI Extracted Data -->
+                <td style="font-size: 0.9rem; max-width: 260px;">
+                    <% if(host.licenseData) { %>
+                        <div class="mb-1">
+                            <strong>🏨 Business</strong><br>
+                            <%= host.licenseData.businessName || 'N/A' %>
+                        </div>
+                        <div class="mb-1">
+                            <strong>🆔 License No</strong><br>
+                            <%= host.licenseData.licenseNumber || 'N/A' %>
+                        </div>
+                        <div class="mb-1">
+                            <strong>📅 Issue Date</strong><br>
+                            <%= host.licenseData.issueDate || 'N/A' %>
+                        </div>
+                        <div class="mb-1">
+                            <strong>⏳ Expiry</strong><br>
+                            <% if(host.licenseData.expiryDate) { %>
+                                <span class="badge bg-success"><%= host.licenseData.expiryDate %></span>
+                            <% } else { %>
+                                <span class="badge bg-danger">Missing</span>
+                            <% } %>
+                        </div>
+                        <div>
+                            <strong>📍 Address</strong><br>
+                            <small><%= host.licenseData.address ? host.licenseData.address.substring(0, 90) + '...' : 'N/A' %></small>
+                        </div>
+                    <% } else { %>
+                        <span class="text-muted">Not analyzed yet</span>
+                    <% } %>
+                </td>
+
+                <!-- AI Recommendation -->
+                <td style="max-width: 300px;">
+                    <% if(host.aiAnalysis) { %>
+                        <div>
+                            <strong>
+                                <% if(host.aiAnalysis.status === 'Approved') { %>🟢
+                                <% } else if(host.aiAnalysis.status === 'Rejected') { %>🔴
+                                <% } else { %>🟡 <% } %>
+                                <%= host.aiAnalysis.status || host.aiAnalysis.recommendation %>
+                            </strong>
+                        </div>
+                        
+                        <small class="text-muted d-block mt-1">
+                            <%= host.aiAnalysis.reason ? host.aiAnalysis.reason.substring(0, 130) + '...' : '' %>
+                        </small>
+                        
+                        <small class="text-info">
+                            Confidence: <strong><%= host.aiAnalysis.confidence || 85 %>%</strong>
+                        </small>
+
+                        <!-- Retrieved Rules -->
+                        <% if(host.aiAnalysis.retrievedRules && host.aiAnalysis.retrievedRules.length > 0) { %>
+                            <div class="mt-2">
+                                <small class="text-muted">Retrieved Rules:</small><br>
+                                <% host.aiAnalysis.retrievedRules.forEach(rule => { %>
+                                    <span class="badge bg-secondary me-1"><%= rule %></span>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <span class="text-muted">Awaiting AI Analysis</span>
+                    <% } %>
+                </td>
+
+                <!-- Actions -->
                 <td>
-                    <form action="/admin/<%= host._id %>/analyze" method="post" style="display:inline;">
-                        <button class="btn btn-primary btn-sm">
-                            Analyze AI
-                        </button>
+                    <form action="/admin/<%= host._id %>/analyze" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-primary btn-sm mb-2">🔄 Re-Analyze AI</button>
                     </form>
+
+                    <% if(host.aiAnalysis) { %>
+                        <span class="badge bg-success d-block mb-2">✅ AI Analyzed</span>
+                    <% } %>
+
+                    <% 
+                        const disableApprove = host.aiAnalysis?.status === 'Rejected' || 
+                                            (host.aiAnalysis?.recommendation || '').toLowerCase().includes('reject');
+                    %>
                     <form action="/admin/<%= host._id %>/approve" method="POST" style="display:inline;">
-                        <button class="btn btn-success btn-sm">Approve</button>
+                        <button class="btn btn-success btn-sm" <%= disableApprove ? 'disabled' : '' %>>Approve</button>
                     </form>
                     <form action="/admin/<%= host._id %>/reject" method="POST" style="display:inline;">
                         <button class="btn btn-danger btn-sm">Reject</button>
-                    </form>                    
+                    </form>
                 </td>
             </tr>
             <% } %>
