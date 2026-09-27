@@ -91,7 +91,7 @@ module.exports.analyzeHost = async (req, res) => {
         req.flash("success", "License analyzed successfully using Vector RAG!");
         res.redirect("/admin/applications");
 
-    } } catch (err) {
+    } catch (err) {
     console.error("❌ ADMIN ANALYSIS ERROR:", err);
     console.error("Error message:", err.message);
     console.error("Stack:", err.stack);
