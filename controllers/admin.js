@@ -21,8 +21,13 @@ module.exports.analyzeHost = async (req, res) => {
         // Step 1: Extract data using Gemini Vision (OCR)
         const result = await extractLicenseData(user.license.url);
         console.log("OCR Result:", result);
-
-        const data = JSON.parse(result);
+        
+        let cleanResult = result
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+        
+        const data = JSON.parse(cleanResult);
 
         user.licenseData = {
             ...data,
