@@ -7,56 +7,72 @@ const ai = new GoogleGenAI({
 
 async function extractLicenseData(imageUrl) {
     try {
+        console.log("🔍 Downloading license image:", imageUrl);
 
         // Download image from Cloudinary
         const image = await axios.get(imageUrl, {
             responseType: "arraybuffer",
         });
 
+        // Get actual MIME type from Cloudinary response
+        const mimeType =
+            image.headers["content-type"] || "image/jpeg";
+
+        console.log("📷 Image MIME type:", mimeType);
+
         const base64Image = Buffer.from(image.data).toString("base64");
 
         const response = await ai.models.generateContent({
-
             model: "gemini-2.5-flash",
 
             contents: [
                 {
-                    inlineData: {
-                        mimeType: "image/png",
-                        data: base64Image,
-                    },
-                },
+                    role: "user",
+                    parts: [
+                        {
+                            inlineData: {
+                                mimeType: mimeType,
+                                data: base64Image,
+                            },
+                        },
+                        {
+                            text: `
+You are an OCR assistant.
 
-                {
-				text: `
-				You are an OCR assistant.
+Extract the following information from this business license.
 
-				Extract the following information from this business license.
+Return ONLY valid JSON in exactly this structure:
 
-				Return ONLY valid JSON.
+{
+    "businessName": "",
+    "licenseNumber": "",
+    "issueDate": "",
+    "expiryDate": "",
+    "address": ""
+}
 
-				{
-				"businessName": "",
-				"licenseNumber": "",
-				"issueDate": "",
-				"expiryDate": "",
-				"address": ""
-				}
-
-				Rules:
-				- If any field is missing, return null.
-				- Return only JSON.
-				- No markdown.
-				- No explanation.
-				`,
+Rules:
+- If any field is missing or cannot be read, return null.
+- Do not guess information.
+- Return only valid JSON.
+- Do not use markdown.
+- Do not include explanations.
+                            `,
+                        },
+                    ],
                 },
             ],
         });
 
-        return response.text;
+        const result = response.text;
+
+        console.log("🤖 Gemini Raw Response:");
+        console.log(result);
+
+        return result;
 
     } catch (err) {
-        console.error("Gemini Error:", err);
+        console.error("❌ Gemini Error:", err);
         throw err;
     }
 }
